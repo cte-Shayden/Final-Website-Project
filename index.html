@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSecurity Fundamentals</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <img src="images/shieldBlueprint.png" alt="Cybersecurity logo" class="brand-mark">
+                <span class="brand-text"><span class="cyber-highlight">Cyber</span>Security Fundamentals</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#cia-triad">CIA Triad</a></li>
+                    <li><a href="#data-states">Data States</a></li>
+                    <li><a href="#auth-aaa">Auth (AAA)</a></li>
+                    <li><a href="#passwords">Passwords</a></li>
+                    <li><a href="#hashing">Hashing</a></li>
+                    <li><a href="#auth-methods">Auth Methods</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <p class="eyebrow">Computer & Information Science - Seaway Tech</p>
+            <h1>Understanding the <span>CIA Triad</span> & Authentication</h1>
+            <p>Explore the core principles every cybersecurity professional must know — Confidentiality, Integrity, Availability, and how we prove who we are in a digital world.</p>
+            <div class="hero-actions">
+                <a href="#cia-triad" class="btn btn-primary">Explore the Triad</a>
+                <a href="#auth-aaa" class="btn btn-secondary">Authentication</a>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <section id="cia-triad" class="cia-section">
+            <div class="section-header">
+                <p class="section-eyebrow">Core Framework</p>
+                <h2>The CIA Triad</h2>
+                <p>Data is a valuable asset. The primary goal of cybersecurity is to maintain three critical properties — collectively known as the CIA Triad — for all data, all the time.</p>
+            </div>
+
+            <div class="cia-cards">
+                <article class="cia-card">
+                    <h4>Confidentiality</h4>
+                    <h5>Data is not revealed</h5>
+                    <p>Protection against unauthorized access. Only those with proper permission should ever be able to read or view the data.</p>
+                    <p>Think of it as a locked diary — only the owner (or those granted access) can read it.</p>
+                    <div class="cia-highlight">
+                        <strong>REAL-WORLD BREACH</strong>
+                        <p>Edward Snowden's 2013 leak of classified NSA government data is a landmark example of a Confidentiality breach.</p>
+                    </div>
+                </article>
+
+                <article class="cia-card">
+                    <h4>Integrity</h4>
+                    <h5>Data is intact - not modified or corrupted</h5>
+                    <p>Protection against unauthorized modification. Data must remain accurate and trustworthy from the moment it is created until it is accessed.</p>
+                    <p>If someone changes your grade in the grade book without permission, that's an Integrity breach.</p>
+                    <div class="cia-highlight">
+                        <strong>REAL-WORLD BREACH</strong>
+                        <p>The Stuxnet worm secretly altered code on Iranian centrifuge machines, causing them to spin too fast and physically break — a classic Integrity attack.</p>
+                    </div>
+                </article>
+
+                <article class="cia-card">
+                    <h4>Availability</h4>
+                    <h5>Data is accessible to allowed users</h5>
+                    <p>Protection against denial of service. Authorized users must be able to access data and systems whenever they legitimately need them.</p>
+                    <p>A website that is always down, or an account that stays locked, fails the Availability test.</p>
+                    <div class="cia-highlight">
+                        <strong>REAL-WORLD BREACH</strong>
+                        <p>The Mirai Botnet used 145,000+ infected cameras and devices to flood security journalist Brian Krebs' website with traffic, crashing it for 4 days — a textbook DDoS / Availability breach.</p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="cia-footer">
+                <p><strong>Security Formula:</strong> Protection = Prevention + (Detection + Response). Every cybersecurity technique fits into at least one of these three elements, and every element maps back to the CIA Triad.</p>
+            </div>
+        </section>
+        <section id="data-states">
+            <h2>Data States</h2>
+            <p>Content for Data States.</p>
+        </section>
+        <section id="auth-aaa">
+            <h2>Auth (AAA)</h2>
+            <p>Content for Auth (AAA).</p>
+        </section>
+        <section id="passwords">
+            <h2>Passwords</h2>
+            <p>Content for Passwords.</p>
+        </section>
+        <section id="hashing">
+            <h2>Hashing</h2>
+            <p>Content for Hashing.</p>
+        </section>
+        <section id="auth-methods">
+            <h2>Auth Methods</h2>
+            <p>Content for Auth Methods.</p>
+        </section>
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>Content for Contact.</p>
+        </section>
+    </main>
+
+    <div class="music-player">
+        <audio id="backgroundMusic" preload="auto" loop>
+            <source src="audio/mus_z_ending.ogg" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="music-controls">
+            <button id="musicToggle" class="music-btn" type="button">♫ Music: OFF</button>
+            <label class="volume-group">
+                <input id="volumeSlider" type="range" min="0" max="100" value="30" class="volume-slider">
+                <span class="volume-label">Vol</span>
+            </label>
+        </div>
+
+        <div id="musicInfo" class="music-info" aria-live="polite">
+            Now Playing: <span id="musicTrack">Loading…</span>
+        </div>
+    </div>
+
+    <script src="js/audio-player.js"></script>
+</body>
+</html>
