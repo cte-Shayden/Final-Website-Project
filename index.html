@@ -87,13 +87,70 @@
                 <p><strong>Security Formula:</strong> Protection = Prevention + (Detection + Response). Every cybersecurity technique fits into at least one of these three elements, and every element maps back to the CIA Triad.</p>
             </div>
         </section>
-        <section id="data-states">
-            <h2>Data States</h2>
-            <p>Content for Data States.</p>
+        <section id="data-states" class="data-states-section">
+            <div class="section-header">
+                <p class="section-eyebrow section-eyebrow--accent">Protecting Data</p>
+                <h2>The Three States of Data</h2>
+                <p>To choose the right security tool, you need to know what state data is currently in. Data exists in one of three states at any given moment.</p>
+            </div>
+
+            <div class="state-cards">
+                <article class="state-card">
+                    <div class="state-icon">💾</div>
+                    <h3>Data at Rest</h3>
+                    <p>Information stored on hard drives, USB drives, DVDs, or memory — sitting still and not currently being moved or processed.</p>
+                    <p class="state-example"><em>Example: Saved files on your laptop's hard drive.</em></p>
+                </article>
+
+                <article class="state-card">
+                    <div class="state-icon">📤</div>
+                    <h3>Data in Transit</h3>
+                    <p>Data actively moving from one system to another — through a network, the internet, or a local file share connection.</p>
+                    <p class="state-example"><em>Example: Sending an email or uploading a file to the cloud.</em></p>
+                </article>
+
+                <article class="state-card">
+                    <div class="state-icon">⚙️</div>
+                    <h3>Data in Use</h3>
+                    <p>Data currently being processed by an application, held in active RAM, or being created/edited by a user right now.</p>
+                    <p class="state-example"><em>Example: A Word document you have open, or app data loaded in memory.</em></p>
+                </article>
+            </div>
+
+            <div class="state-note">
+                <div class="state-note-icon">🛡️</div>
+                <p>Different tools protect different states: Encryption for data at rest, secure protocols (HTTPS/TLS)for data in transit, and access controls &amp; authentication for data in use.</p>
+            </div>
         </section>
-        <section id="auth-aaa">
-            <h2>Auth (AAA)</h2>
-            <p>Content for Auth (AAA).</p>
+        <section id="auth-aaa" class="auth-section">
+            <div class="section-header">
+                <p class="section-eyebrow section-eyebrow--accent">The AAA Security Model</p>
+                <h2>Authentication, Access Control &amp; Accounting</h2>
+                <p>The AAA model describes the three tools used in practice to achieve the CIA Triad.</p>
+            </div>
+
+            <div class="auth-cards">
+                <article class="auth-card">
+                    <div class="auth-card-icon">A</div>
+                    <h3>Authentication</h3>
+                    <p>Prove who you are. Authentication is the establishment of trust between two parties. Without trust, information cannot safely be shared or accessed.</p>
+                </article>
+                <article class="auth-card">
+                    <div class="auth-card-icon">A</div>
+                    <h3>Access Control</h3>
+                    <p>What are you allowed to see or reach? Also called authorization or permissions. Not every authenticated user should access everything.</p>
+                </article>
+                <article class="auth-card">
+                    <div class="auth-card-icon">A</div>
+                    <h3>Accounting</h3>
+                    <p>Keep track of what happened. Also called auditing. Logs and records let us review activity, detect anomalies, and respond to incidents.</p>
+                </article>
+            </div>
+
+            <div class="auth-note">
+                <div class="auth-note-icon">🔑</div>
+                <p><strong>The 3 Ways to Authenticate:</strong> <span>Something you know</span> (password or PIN) • <span>Something you have</span> (smart card, hardware token, code sent to your phone) • <span>Something you are</span> (fingerprint, retina scan, voice)</p>
+            </div>
         </section>
         <section id="passwords">
             <h2>Passwords</h2>
@@ -114,13 +171,14 @@
     </main>
 
     <div class="music-player">
-        <audio id="backgroundMusic" preload="auto" loop>
-            <source src="audio/mus_z_ending.ogg" type="audio/mpeg">
+        <audio id="backgroundMusic" preload="auto">
+            <source src="audio/mus_z_ending.ogg" type="audio/ogg">
             Your browser does not support the audio element.
         </audio>
 
         <div class="music-controls">
             <button id="musicToggle" class="music-btn" type="button">♫ Music: OFF</button>
+            <button id="musicRandom" class="music-btn" type="button">♫ Random: OFF</button>
             <label class="volume-group">
                 <input id="volumeSlider" type="range" min="0" max="100" value="30" class="volume-slider">
                 <span class="volume-label">Vol</span>
@@ -131,6 +189,35 @@
             Now Playing: <span id="musicTrack">Loading…</span>
         </div>
     </div>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>CyberSecure Fundamentals</h3>
+                <p>Computer &amp; Information Science — Seaway Tech</p>
+                <p>Content based on the NIST Cybersecurity Framework</p>
+            </div>
+            <div class="footer-links">
+                <span class="links-heading">Quick Links</span>
+                <nav aria-label="Footer quick links">
+                    <ul>
+                        <li><a href="#cia-triad">CIA Triad</a></li>
+                        <li><a href="#data-states">Data States</a></li>
+                        <li><a href="#auth-aaa">Authentication</a></li>
+                        <li><a href="#passwords">Passwords</a></li>
+                        <li><a href="#hashing">Hashing</a></li>
+                        <li><a href="#auth-methods">Auth Methods</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p><a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">NIST CyberFramework</a> • <a href="https://haveibeenpwned.com" target="_blank" rel="noopener">HaveIBeenPwned</a></p>
+            <p>Images created by gamma.app &amp; Google Gemini</p>
+            <p>&copy; 2025 CyberSecure Fundamentals — All Rights Reserved</p>
+        </div>
+    </footer>
 
     <script src="js/audio-player.js"></script>
 </body>
