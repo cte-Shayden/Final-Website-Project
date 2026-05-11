@@ -496,11 +496,214 @@ section p {
     font-weight: 700;
 }
 
-@media (max-width: 840px) {
-    .header-inner {
-        flex-direction: column;
-        align-items: flex-start;
+.passwords-section .section-header {
+    max-width: 860px;
+}
+
+.password-table-wrap {
+    overflow-x: auto;
+    margin-top: 24px;
+}
+
+.password-grid {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.password-grid th,
+.password-grid td {
+    padding: 18px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+}
+
+.password-grid thead th {
+    color: var(--highlight-green);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    border-bottom: 1px solid rgba(123, 230, 255, 0.18);
+    vertical-align: bottom;
+}
+
+.password-grid th span {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: none;
+}
+
+.password-grid td {
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.password-grid tr:last-child td {
+    border-bottom: none;
+}
+
+.status-red { color: #ff6f61 !important; font-weight: 700; }
+.status-orange { color: #ffb347 !important; font-weight: 700; }
+.status-yellow { color: #ffe762 !important; font-weight: 700; }
+.status-green { color: #7fffb8 !important; font-weight: 700; }
+
+.password-note,
+.hashing-note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    align-items: center;
+    margin-top: 32px;
+    padding: 22px 24px;
+    border-radius: 20px;
+    background: rgba(123, 230, 255, 0.08);
+    border: 1px solid rgba(123, 230, 255, 0.16);
+}
+
+.password-note-icon,
+.hashing-note-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--highlight-green);
+    color: var(--surface);
+    font-size: 1.35rem;
+}
+
+.password-note p,
+.hashing-note p {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.75;
+}
+
+.hashing-flow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+    margin-top: 28px;
+}
+
+.hashing-flow-item {
+    border-radius: 24px;
+    padding: 24px 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.22);
+}
+
+.hashing-flow-item--arrow {
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    color: var(--highlight-green);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.hashing-card-label {
+    display: block;
+    margin-bottom: 14px;
+    color: var(--highlight-orange);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+}
+
+.hashing-flow-item--box strong {
+    display: inline-block;
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.hashing-flow-item--box pre {
+    margin: 0;
+    color: var(--text);
+    font-family: "Determination Mono Web", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.hashing-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.hashing-card {
+    background: var(--surface-alt);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.30);
+}
+
+.hashing-card-icon {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: rgba(255, 179, 71, 0.18);
+    color: var(--highlight-orange);
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.hashing-card h3 {
+    margin: 0 0 12px;
+    color: var(--text);
+    font-size: 1.15rem;
+}
+
+.hashing-card-tag {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: var(--highlight-green);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+}
+
+.hashing-card p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.8;
+}
+
+.hashing-card code,
+.hashing-note code {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 6px;
+    border-radius: 8px;
+    color: var(--highlight-green);
+    font-family: "Determination Mono Web", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@media (max-width: 980px) {
+    .hashing-cards,
+    .passwords-section .hashing-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+@media (max-width: 840px) {
     nav ul {
         gap: 12px;
     }
@@ -589,12 +792,14 @@ section p {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
+    flex: 1 1 260px;
 }
 
 .volume-slider {
-    width: 180px;
-    max-width: 260px;
- cursor: url('../assets/UNDERTALE Soul Cursor.cur'), auto;
+    width: 100%;
+    max-width: none;
+    cursor: url('../assets/UNDERTALE Soul Cursor.cur'), auto;
 }
 
 .volume-label {

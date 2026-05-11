@@ -10,7 +10,15 @@ const tracks = [
     'audio/mus_core.ogg',
     'audio/mus_vsasgore.ogg',
     'audio/mus_x_undyne.ogg',
-    'audio/mus_z_ending.ogg'
+    'audio/mus_z_ending.ogg',
+    'audio/mus_amalgam.ogg',
+    'audio/mus_ambientwater.ogg',
+    'audio/mus_battle1.ogg',
+    'audio/mus_battle2.ogg',
+    'audio/mus_reunited.ogg',
+    'audio/mus_ruins.ogg',
+    'audio/mus_sansdate.ogg',
+    'audio/mus_snowy.ogg'
 ];
 
 const sourceEl = audioEl.querySelector('source');
@@ -22,7 +30,7 @@ let isRandom = false;
 let infoTimeout = null;
 
 audioEl.volume = 0.3;
-volumeSlider.value = 30;
+volumeSlider.value = 30
 loadTrack(currentTrackIndex);
 
 function getTrackName(source) {

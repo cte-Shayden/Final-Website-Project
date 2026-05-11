@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberSecurity Fundamentals</title>
+    <link rel="icon" href="images/digitalVault.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -152,13 +153,177 @@
                 <p><strong>The 3 Ways to Authenticate:</strong> <span>Something you know</span> (password or PIN) • <span>Something you have</span> (smart card, hardware token, code sent to your phone) • <span>Something you are</span> (fingerprint, retina scan, voice)</p>
             </div>
         </section>
-        <section id="passwords">
-            <h2>Passwords</h2>
-            <p>Content for Passwords.</p>
+        <section id="passwords" class="passwords-section">
+            <div class="section-header">
+                <p class="section-eyebrow section-eyebrow--accent">Password Strength</p>
+                <h2>How Long to Brute Force Your Password?</h2>
+                <p>Estimated crack time based on password length and character types used. <span class="status-key"><span class="status-red">Red</span> = cracked instantly → <span class="status-green">Green</span> = extremely safe</span></p>
+            </div>
+
+            <div class="password-table-wrap">
+                <table class="password-grid">
+                    <thead>
+                        <tr>
+                            <th># CHARS</th>
+                            <th>NUMBERS ONLY <span>(0-9)</span></th>
+                            <th>LOWERCASE ONLY <span>(a-z)</span></th>
+                            <th>UPPER &amp; LOWER <span>(A-Z, a-z)</span></th>
+                            <th>NUMBERS + MIXED CASE <span>(A-Z, a-z, 0-9)</span></th>
+                            <th>NUMBERS + MIXED + SYMBOLS <span>(ALL CHARACTERS)</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-orange">1 sec</td>
+                            <td class="status-orange">5 sec</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-orange">25 sec</td>
+                            <td class="status-yellow">1 min</td>
+                            <td class="status-yellow">6 min</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-orange">5 sec</td>
+                            <td class="status-yellow">22 min</td>
+                            <td class="status-green">1 hour</td>
+                            <td class="status-green">8 hours</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-orange">2 min</td>
+                            <td class="status-yellow">19 hours</td>
+                            <td class="status-green">3 days</td>
+                            <td class="status-green">3 weeks</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td class="status-red">Instantly</td>
+                            <td class="status-orange">58 min</td>
+                            <td class="status-green">1 month</td>
+                            <td class="status-green">7 months</td>
+                            <td class="status-green">5 years</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td class="status-orange">2 sec</td>
+                            <td class="status-yellow">1 day</td>
+                            <td class="status-green">5 years</td>
+                            <td class="status-green">41 years</td>
+                            <td class="status-green">400 years</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td class="status-orange">25 sec</td>
+                            <td class="status-yellow">3 weeks</td>
+                            <td class="status-green">300 years</td>
+                            <td class="status-green">2,000 years</td>
+                            <td class="status-green">34,000 years</td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td class="status-yellow">6 hours</td>
+                            <td class="status-green">1,000 years</td>
+                            <td class="status-green">43 million years</td>
+                            <td class="status-green">600 million years</td>
+                            <td class="status-green">15 billion years</td>
+                        </tr>
+                        <tr>
+                            <td>18+</td>
+                            <td class="status-green">9 months</td>
+                            <td class="status-green">23 million years</td>
+                            <td class="status-green">6 trillion years</td>
+                            <td class="status-green">100 trillion years</td>
+                            <td class="status-green">7 quadrillion years</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="password-note">
+                <div class="password-note-icon">⚠️</div>
+                <p><strong>What Hackers Already Know:</strong> Capital letters are usually at the start, numbers are usually 1 or 2 at the start or end, women often choose personal names, and men often choose hobbies. Don&#8217;t be predictable — length and variety are your best defense!</p>
+            </div>
         </section>
-        <section id="hashing">
-            <h2>Hashing</h2>
-            <p>Content for Hashing.</p>
+        <section id="hashing" class="hashing-section">
+            <div class="section-header">
+                <p class="section-eyebrow section-eyebrow--accent">Password Storage</p>
+                <h2>Password Hashing &amp; Salting</h2>
+                <p>Passwords should never be stored as plain text. The most common safe storage method is hashing — a one-way mathematical transformation.</p>
+            </div>
+
+            <div class="hashing-flow">
+                <div class="hashing-flow-item hashing-flow-item--box">
+                    <span class="hashing-card-label">PLAIN TEXT PASSWORD</span>
+                    <strong>Pa$$word123</strong>
+                </div>
+                <div class="hashing-flow-item hashing-flow-item--arrow">→</div>
+                <div class="hashing-flow-item hashing-flow-item--box">
+                    <span class="hashing-card-label">HASHING FUNCTION</span>
+                    <strong>SHA-256 Algorithm</strong>
+                </div>
+                <div class="hashing-flow-item hashing-flow-item--arrow">→</div>
+                <div class="hashing-flow-item hashing-flow-item--box">
+                    <span class="hashing-card-label">STORED HASH</span>
+                    <pre>e52cac6741
+9a9a5f4dcc
+3b5aa765d6…</pre>
+                </div>
+                <div class="hashing-flow-item hashing-flow-item--arrow">→</div>
+                <div class="hashing-flow-item hashing-flow-item--box">
+                    <span class="hashing-card-label">LOGIN COMPARISON</span>
+                    <strong>Hashes MATCH ✓<br>ACCESS GRANTED</strong>
+                </div>
+            </div>
+
+            <div class="hashing-cards">
+                <article class="hashing-card">
+                    <div class="hashing-card-icon">12<br>34</div>
+                    <h3>What is Hashing?</h3>
+                    <p><span class="hashing-card-tag">ONE-WAY CONVERSION</span></p>
+                    <p>A mathematical function converts a password into a fixed-length string called a hash. It is one-way — the original password cannot be recovered from the hash alone. Common algorithms: MD5, SHA-256, SHA-512.</p>
+                </article>
+                <article class="hashing-card">
+                    <div class="hashing-card-icon">🌈</div>
+                    <h3>Rainbow Tables</h3>
+                    <p><span class="hashing-card-tag">ATTACK METHOD</span></p>
+                    <p>A massive precomputed file of hash values for every possible password. Attackers look up a stolen hash to instantly find the matching password — no cracking required.</p>
+                </article>
+                <article class="hashing-card">
+                    <div class="hashing-card-icon">🧂</div>
+                    <h3>Salting</h3>
+                    <p><span class="hashing-card-tag">DEFENSE METHOD</span></p>
+                    <p>A unique random string (a salt) is added to each password before hashing. Even identical passwords produce different hashes, completely defeating rainbow table lookups.</p>
+                </article>
+                <article class="hashing-card">
+                    <div class="hashing-card-icon">💻</div>
+                    <h3>Pass-the-Hash</h3>
+                    <p><span class="hashing-card-tag">ADVANCED ATTACK</span></p>
+                    <p>The attacker steals the hash directly from storage (Windows SAM hive or Linux <code>/etc/shadow</code>) and uses it to authenticate — without ever knowing the original password.</p>
+                </article>
+            </div>
+
+            <div class="hashing-note">
+                <div class="hashing-note-icon">🔐</div>
+                <p><strong>Where Are Passwords Stored?</strong> On Windows: in the SAM registry hive. On Linux: in <code>/etc/shadow</code> (root access only). The older <code>/etc/passwd</code> file is world-readable and not safe for passwords.</p>
+            </div>
         </section>
         <section id="auth-methods">
             <h2>Auth Methods</h2>
@@ -173,7 +338,6 @@
     <div class="music-player">
         <audio id="backgroundMusic" preload="auto">
             <source src="audio/mus_z_ending.ogg" type="audio/ogg">
-            Your browser does not support the audio element.
         </audio>
 
         <div class="music-controls">
