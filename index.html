@@ -325,9 +325,99 @@
                 <p><strong>Where Are Passwords Stored?</strong> On Windows: in the SAM registry hive. On Linux: in <code>/etc/shadow</code> (root access only). The older <code>/etc/passwd</code> file is world-readable and not safe for passwords.</p>
             </div>
         </section>
-        <section id="auth-methods">
-            <h2>Auth Methods</h2>
-            <p>Content for Auth Methods.</p>
+        <section id="auth-methods" class="auth-methods-section">
+            <div class="section-header">
+                <p class="section-eyebrow section-eyebrow--accent">Beyond Passwords</p>
+                <h2>Methods of Authentication</h2>
+                <p>Modern security goes far beyond passwords. Here are the key authentication methods used in real-world systems — and how combining them creates much stronger protection.</p>
+            </div>
+
+            <div class="auth-methods-grid">
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">💳</div>
+                    <h3>Smart Cards</h3>
+                    <p class="auth-method-tag">Something you have</p>
+                    <p>Cards with an embedded chip automatically recognized by an authenticating device. Proximity readers can detect them in a pocket or purse without physical contact.</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">🌐</div>
+                    <h3>Digital Certificates</h3>
+                    <p class="auth-method-tag">Something you have</p>
+                    <p>Servers use certificates to authenticate with browsers (the 🔒 padlock in your address bar). Issued by trusted third-party Certificate Authorities (CAs).</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">👆</div>
+                    <h3>Biometrics</h3>
+                    <p class="auth-method-tag">Something you are</p>
+                    <p>Uses measurable physical characteristics: fingerprint, retina scan, voice, or even typing speed. Disney World uses finger biometrics for multi-day pass verification.</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">🔑</div>
+                    <h3>Hardware Tokens (OTP)</h3>
+                    <p class="auth-method-tag">Something you have</p>
+                    <p>A physical device generates a new One-Time Password (OTP) every 60 seconds. Since each OTP is used exactly once, intercepting it is useless to an attacker.</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">📱</div>
+                    <h3>Two-Factor Auth (2FA)</h3>
+                    <p class="auth-method-tag">Know + Have</p>
+                    <p>Combines two factors — such as a password plus a PIN sent to your phone (like Google 2-Step Verification). One stolen factor alone is useless.</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">🛡️</div>
+                    <h3>Multi-Factor Auth (MFA)</h3>
+                    <p class="auth-method-tag">Two or more factors</p>
+                    <p>Uses two or more different authentication factors. The gold standard for account security — combining know, have, and/or are dramatically reduces breach risk.</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">🔗</div>
+                    <h3>Single Sign-On (SSO)</h3>
+                    <p class="auth-method-tag">One login, many resources</p>
+                    <p>One authentication grants access to many servers or services. Used widely in schools and businesses to reduce password fatigue while maintaining security.</p>
+                </article>
+
+                <article class="auth-method-card">
+                    <div class="auth-method-card-icon">📝</div>
+                    <h3>Passphrases</h3>
+                    <p class="auth-method-tag">Something you know</p>
+                    <p>A string of multiple words offers more security than a complex password and is easier to remember. Example: “The 3 little pigs say do not forget the bacon!”</p>
+                </article>
+            </div>
+
+            <section class="auth-methods-followup">
+                <div class="auth-methods-followup-panel">
+                    <div class="followup-heading">
+                        <span class="followup-heading-icon">⛔</span>
+                        <h2>Top 3 Ways to Stop Password Attacks</h2>
+                    </div>
+
+                    <div class="followup-grid">
+                        <article class="followup-card">
+                            <h3>#1 — Use Strong Passwords</h3>
+                            <p>Long passwords with mixed characters won't be in a dictionary and take too long to crack. 12+ characters, all character types.</p>
+                        </article>
+                        <article class="followup-card">
+                            <h3>#2 — Enable Account Lockout</h3>
+                            <p>Lock accounts after 3-5 failed attempts. This stops all automated brute force, dictionary, and spraying attacks cold.</p>
+                        </article>
+                        <article class="followup-card">
+                            <h3>#3 — Enable MFA / 2FA</h3>
+                            <p>Even if a password is stolen, an attacker still cannot log in without your second factor. Enable it everywhere you can.</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="auth-methods-resources">
+                    <div class="resources-icon">🔗</div>
+                    <p><strong>Useful Resources:</strong> Check if your credentials have been exposed at <a href="https://haveibeenpwned.com" target="_blank" rel="noopener">HaveIBeenPwned.com</a> • Learn more about the NIST Cybersecurity Framework at <a href="https://nist.gov/cyberframework" target="_blank" rel="noopener">nist.gov/cyberframework</a></p>
+                </div>
+            </section>
         </section>
         <section id="contact">
             <h2>Contact</h2>
@@ -335,22 +425,52 @@
         </section>
     </main>
 
-    <div class="music-player">
-        <audio id="backgroundMusic" preload="auto">
-            <source src="audio/mus_z_ending.ogg" type="audio/ogg">
-        </audio>
+    <div id="musicWidget" class="music-widget" style="left: 24px; top: 64vh;">
+        <audio id="backgroundMusic" preload="auto" hidden></audio>
+        <button id="musicWidgetButton" class="widget-button" type="button" aria-label="Open music controls">🎵</button>
 
-        <div class="music-controls">
-            <button id="musicToggle" class="music-btn" type="button">♫ Music: OFF</button>
-            <button id="musicRandom" class="music-btn" type="button">♫ Random: OFF</button>
-            <label class="volume-group">
-                <input id="volumeSlider" type="range" min="0" max="100" value="30" class="volume-slider">
-                <span class="volume-label">Vol</span>
-            </label>
-        </div>
+        <div id="musicWidgetPanel" class="widget-panel" role="dialog" aria-label="Music controls">
+            <div class="widget-panel-header">
+                <span>Music Player</span>
+                <button id="widgetClose" class="widget-close" type="button" aria-label="Close music controls">×</button>
+            </div>
 
-        <div id="musicInfo" class="music-info" aria-live="polite">
-            Now Playing: <span id="musicTrack">Loading…</span>
+            <div class="widget-track">Now Playing: <span id="musicTrack">Loading…</span></div>
+            <div id="musicInfo" class="music-info" aria-live="polite">Ready</div>
+
+            <div class="widget-controls">
+                <button id="musicToggle" class="music-btn" type="button">Play</button>
+                <button id="musicPrev" class="music-btn" type="button">Prev</button>
+                <button id="musicSkip" class="music-btn" type="button">Next</button>
+            </div>
+            <div class="widget-controls">
+                <button id="musicRandom" class="music-btn" type="button">Random: OFF</button>
+                <button id="musicLoop" class="music-btn" type="button">Loop: OFF</button>
+            </div>
+
+            <div class="widget-sliders">
+                <label class="slider-group">
+                    <span>Vol</span>
+                    <input id="volumeSlider" type="range" min="0" max="100" value="30" class="volume-slider">
+                </label>
+                <label class="slider-group">
+                    <span>Pitch</span>
+                    <input id="pitchSlider" type="range" min="50" max="150" value="100" class="volume-slider">
+                    <span class="slider-value"><span id="pitchLabel">100%</span></span>
+                </label>
+                <label class="slider-group">
+                    <span>Speed</span>
+                    <input id="speedSlider" type="range" min="50" max="150" value="100" class="volume-slider">
+                    <span class="slider-value"><span id="speedLabel">100%</span></span>
+                </label>
+                <label class="slider-group">
+                    <span>Tempo</span>
+                    <input id="tempoSlider" type="range" min="50" max="150" value="100" class="volume-slider">
+                    <span class="slider-value"><span id="tempoLabel">100%</span></span>
+                </label>
+            </div>
+
+            <div class="widget-status">Up Next: <span id="upNextTrack">Loading…</span></div>
         </div>
     </div>
 
@@ -383,6 +503,6 @@
         </div>
     </footer>
 
-    <script src="js/audio-player.js"></script>
+    <script type="module" src="js/audio-player.js"></script>
 </body>
 </html>
