@@ -929,6 +929,12 @@ section p {
     }
 }
 
+.widget-button img {
+  width: 24px;  /* Adjust based on your design */
+  height: auto;
+  display: block;
+}
+
 .music-player {
     max-width: 1180px;
     margin: 0 auto 32px;
