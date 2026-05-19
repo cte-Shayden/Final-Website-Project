@@ -1,6 +1,5 @@
 import { PitchShifter } from './soundtouch.js';
 
-// DOM Elements
 const musicToggle = document.getElementById('musicToggle');
 const musicPrev = document.getElementById('musicPrev');
 const musicRandom = document.getElementById('musicRandom');
@@ -39,11 +38,10 @@ const tracks = [
     'audio/mus_mettaton_neo.ogg',
     'audio/mus_dummybattle.ogg',
     'audio/Give_Up.mp3',
-    'audio/mus_muscle.ogg',
-    'audio/FriendsNoMore.ogg'
+    'audio/mus_muscle.ogg'
 ];
 
-// State Management
+
 let currentTrackIndex = 0;
 let isRandom = false;
 let isLoop = false;
@@ -57,13 +55,13 @@ let isPlaying = false;
 let nativeFallback = false;
 const defaultVolume = 0.3;
 
-// Widget Drag State
+
 let widgetDragging = false;
 let widgetDragMoved = false;
 let widgetDragStart = { x: 0, y: 0 };
 let widgetStart = { x: 0, y: 0 };
 
-// --- Initialization ---
+
 volumeSlider.value = defaultVolume * 100;
 if (pitchSlider) pitchSlider.value = 100;
 if (speedSlider) speedSlider.value = 100;
@@ -76,7 +74,6 @@ function getTrackName(source) {
         .replace(/_/g, ' ');
 }
 
-// --- Audio Core ---
 
 async function initAudioContext() {
     if (audioContext) return;
@@ -126,7 +123,7 @@ async function startPlayback(startPercent = 0) {
     try {
         pitchShifter = new PitchShifter(audioContext, currentBuffer, 4096, handleTrackEnd);
         
-        // Sync engine to slider values
+  
         pitchShifter.pitch = Number(pitchSlider.value) / 100;
         pitchShifter.rate = Number(speedSlider.value) / 100;
         pitchShifter.tempo = Number(tempoSlider.value) / 100;
@@ -207,9 +204,7 @@ function updateButton(playing) {
     musicToggle.classList.toggle('playing', playing);
 }
 
-// --- EVENT LISTENERS ---
 
-// Play/Pause
 musicToggle.addEventListener('click', async () => {
     if (isPlaying) {
         if (pitchShifter) currentProgressPercent = pitchShifter.percentagePlayed;
@@ -219,7 +214,7 @@ musicToggle.addEventListener('click', async () => {
     }
 });
 
-// Navigation
+
 musicPrev.addEventListener('click', () => loadPreviousTrack(isPlaying));
 musicSkip.addEventListener('click', () => loadNextTrack(isPlaying));
 
@@ -236,7 +231,7 @@ musicLoop.addEventListener('click', () => {
     musicLoop.classList.toggle('playing', isLoop);
 });
 
-// Sliders
+
 volumeSlider.addEventListener('input', (e) => {
     const val = e.target.value / 100;
     if (outputGain) outputGain.gain.value = val;
@@ -262,7 +257,6 @@ tempoSlider?.addEventListener('input', (e) => {
     if (pitchShifter) pitchShifter.tempo = val / 100;
 });
 
-// Widget Dragging
 musicWidgetButton.addEventListener('pointerdown', (e) => {
     widgetDragging = true;
     widgetDragMoved = false;
@@ -293,10 +287,8 @@ musicWidgetButton.addEventListener('click', () => {
 
 widgetClose.addEventListener('click', () => musicWidgetPanel.classList.remove('open'));
 
-// Native Audio End Event
 audioEl.addEventListener('ended', () => {
     if (nativeFallback) handleTrackEnd();
 });
 
-// Initial Load
 loadTrack(currentTrackIndex, false);
