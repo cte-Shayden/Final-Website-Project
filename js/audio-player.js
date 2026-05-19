@@ -1,26 +1,32 @@
 import { PitchShifter } from './soundtouch.js';
 
+// --- UI Elements ---
 const musicToggle = document.getElementById('musicToggle');
 const musicPrev = document.getElementById('musicPrev');
+const musicSkip = document.getElementById('musicSkip');
 const musicRandom = document.getElementById('musicRandom');
 const musicLoop = document.getElementById('musicLoop');
-const musicSkip = document.getElementById('musicSkip');
+
 const volumeSlider = document.getElementById('volumeSlider');
 const pitchSlider = document.getElementById('pitchSlider');
-const pitchLabel = document.getElementById('pitchLabel');
 const speedSlider = document.getElementById('speedSlider');
-const speedLabel = document.getElementById('speedLabel');
 const tempoSlider = document.getElementById('tempoSlider');
+
+const pitchLabel = document.getElementById('pitchLabel');
+const speedLabel = document.getElementById('speedLabel');
 const tempoLabel = document.getElementById('tempoLabel');
+
 const musicInfo = document.getElementById('musicInfo');
 const musicTrack = document.getElementById('musicTrack');
 const upNextTrack = document.getElementById('upNextTrack');
+
 const musicWidget = document.getElementById('musicWidget');
 const musicWidgetButton = document.getElementById('musicWidgetButton');
 const musicWidgetPanel = document.getElementById('musicWidgetPanel');
 const widgetClose = document.getElementById('widgetClose');
 const audioEl = document.getElementById('backgroundMusic');
 
+// --- Playlist ---
 const tracks = [
     'audio/mus_anothermedium.ogg',
     'audio/mus_core.ogg',
@@ -41,62 +47,91 @@ const tracks = [
     'audio/mus_muscle.ogg'
 ];
 
-
+// --- State Variables ---
 let currentTrackIndex = 0;
+let isPlaying = false;
 let isRandom = false;
 let isLoop = false;
-let infoTimeout = null;
+
 let audioContext = null;
 let outputGain = null;
 let pitchShifter = null;
 let currentBuffer = null;
 let currentProgressPercent = 0;
-let isPlaying = false;
 let nativeFallback = false;
+
+let infoTimeout;
 const defaultVolume = 0.3;
 
+// Dragging state for the widget
+let isDragging = false;
+let hasMoved = false;
+let startX, startY, widgetX, widgetY;
 
-let widgetDragging = false;
-let widgetDragMoved = false;
-let widgetDragStart = { x: 0, y: 0 };
-let widgetStart = { x: 0, y: 0 };
-
-
+// Initialize sliders
 volumeSlider.value = defaultVolume * 100;
 if (pitchSlider) pitchSlider.value = 100;
 if (speedSlider) speedSlider.value = 100;
 if (tempoSlider) tempoSlider.value = 100;
 
+
+// --- Helper Functions ---
+
+// Cleans up file path to get a pretty track title
 function getTrackName(source) {
     if (!source) return "Unknown";
-    return decodeURIComponent(source.split('/').pop())
-        .replace(/\.(mp3|wav|ogg|flac|m4a)$/i, '')
+    let filename = source.split('/').pop();
+    // Strip extension and replace underscores with spaces
+    return decodeURIComponent(filename)
+        .replace(/\.[^/.]+$/, "")
         .replace(/_/g, ' ');
-}
-
-
-async function initAudioContext() {
-    if (audioContext) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioContext = new AudioContext();
-    outputGain = audioContext.createGain();
-    outputGain.gain.value = volumeSlider.value / 100;
-    outputGain.connect(audioContext.destination);
-}
-
-async function fetchAudioBuffer(source) {
-    const response = await fetch(source);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const arrayBuffer = await response.arrayBuffer();
-    return await audioContext.decodeAudioData(arrayBuffer);
 }
 
 function setStatus(message, isError = false) {
     musicInfo.textContent = message;
-    musicInfo.classList.toggle('error', isError);
+    if (isError) {
+        musicInfo.classList.add('error');
+    } else {
+        musicInfo.classList.remove('error');
+    }
     musicInfo.classList.add('show');
+    
     clearTimeout(infoTimeout);
-    infoTimeout = setTimeout(() => musicInfo.classList.remove('show'), 5000);
+    infoTimeout = setTimeout(() => {
+        musicInfo.classList.remove('show');
+    }, 5000);
+}
+
+function updateUpNext() {
+    let nextIndex;
+    if (isRandom) {
+        nextIndex = Math.floor(Math.random() * tracks.length);
+    } else {
+        nextIndex = (currentTrackIndex + 1) % tracks.length;
+    }
+    upNextTrack.textContent = getTrackName(tracks[nextIndex]);
+}
+
+function updateButtonState() {
+    musicToggle.textContent = isPlaying ? '♫ Music: ON' : '♫ Music: OFF';
+    if (isPlaying) {
+        musicToggle.classList.add('playing');
+    } else {
+        musicToggle.classList.remove('playing');
+    }
+}
+
+
+// --- Audio Core Logic ---
+
+async function initAudio() {
+    if (audioContext) return;
+    
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    audioContext = new AudioContextClass();
+    outputGain = audioContext.createGain();
+    outputGain.gain.value = volumeSlider.value / 100;
+    outputGain.connect(audioContext.destination);
 }
 
 function stopPlayback() {
@@ -106,117 +141,129 @@ function stopPlayback() {
     }
     audioEl.pause();
     isPlaying = false;
-    updateButton(false);
+    updateButtonState();
 }
 
-async function startPlayback(startPercent = 0) {
-    await initAudioContext();
-    if (audioContext.state === 'suspended') await audioContext.resume();
+async function playNative() {
+    nativeFallback = true;
+    audioEl.src = tracks[currentTrackIndex];
+    audioEl.volume = volumeSlider.value / 100;
+    audioEl.playbackRate = speedSlider.value / 100;
+    
+    try {
+        await audioEl.play();
+        isPlaying = true;
+        updateButtonState();
+        setStatus('Playing (Native Fallback - No Pitch/Tempo adjustment)');
+    } catch (err) {
+        console.error(err);
+        setStatus('Playback failed entirely.', true);
+    }
+}
+
+async function startPlayback(resumePercent = 0) {
+    await initAudio();
+    if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+    }
 
     stopPlayback();
 
+    // If buffer failed to load earlier, drop straight to native HTML5 audio
     if (!currentBuffer) {
-        await playNativeTrack();
+        playNative();
         return;
     }
 
     try {
         pitchShifter = new PitchShifter(audioContext, currentBuffer, 4096, handleTrackEnd);
         
-  
-        pitchShifter.pitch = Number(pitchSlider.value) / 100;
-        pitchShifter.rate = Number(speedSlider.value) / 100;
-        pitchShifter.tempo = Number(tempoSlider.value) / 100;
+        // Apply current slider values
+        pitchShifter.pitch = pitchSlider.value / 100;
+        pitchShifter.rate = speedSlider.value / 100;
+        pitchShifter.tempo = tempoSlider.value / 100;
         
         pitchShifter.connect(outputGain);
         
-        if (startPercent > 0) pitchShifter.percentagePlayed = startPercent;
+        if (resumePercent > 0) {
+            pitchShifter.percentagePlayed = resumePercent;
+        }
         
         isPlaying = true;
-        updateButton(true);
+        updateButtonState();
         setStatus(`Playing: ${getTrackName(tracks[currentTrackIndex])}`);
     } catch (e) {
-        console.error("PitchShifter failed", e);
-        await playNativeTrack();
-    }
-}
-
-async function playNativeTrack() {
-    nativeFallback = true;
-    audioEl.src = tracks[currentTrackIndex];
-    audioEl.volume = volumeSlider.value / 100;
-    audioEl.playbackRate = Number(speedSlider.value) / 100;
-    
-    try {
-        await audioEl.play();
-        isPlaying = true;
-        updateButton(true);
-        setStatus('Native Fallback (No Pitch/Tempo)');
-    } catch (error) {
-        setStatus('Playback failed', true);
+        console.warn("SoundTouch PitchShifter failed, falling back to native:", e);
+        playNative();
     }
 }
 
 async function loadTrack(index, autoPlay = false) {
     stopPlayback();
+    
+    // Keep index in array bounds
     currentTrackIndex = (index + tracks.length) % tracks.length;
-    const source = tracks[currentTrackIndex];
-    musicTrack.textContent = getTrackName(source);
+    const currentSource = tracks[currentTrackIndex];
+    musicTrack.textContent = getTrackName(currentSource);
     
     try {
-        await initAudioContext();
-        setStatus('Loading audio...');
-        currentBuffer = await fetchAudioBuffer(source);
+        await initAudio();
+        setStatus('Loading track...');
+        
+        // Fetch and decode audio data
+        const res = await fetch(currentSource);
+        const arrayBuffer = await res.arrayBuffer();
+        currentBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        
         nativeFallback = false;
         setStatus('Ready');
-    } catch (error) {
-        console.warn('Advanced audio failed, using native mode.');
-        nativeFallback = true;
+    } catch (err) {
+        console.warn('Advanced audio loading failed. Will use native mode.', err);
         currentBuffer = null;
+        nativeFallback = true;
     }
 
     currentProgressPercent = 0;
-    if (autoPlay) await startPlayback(0);
+    if (autoPlay) {
+        startPlayback(0);
+    }
     updateUpNext();
 }
 
 function handleTrackEnd() {
-    isLoop ? loadTrack(currentTrackIndex, true) : loadNextTrack(true);
+    if (isLoop) {
+        loadTrack(currentTrackIndex, true);
+    } else {
+        changeTrack(1); // Next track
+    }
 }
 
-function updateUpNext() {
-    let nextIdx = isRandom ? Math.floor(Math.random() * tracks.length) : (currentTrackIndex + 1) % tracks.length;
-    upNextTrack.textContent = getTrackName(tracks[nextIdx]);
-}
-
-async function loadNextTrack(play = false) {
-    let nextIdx = isRandom ? Math.floor(Math.random() * tracks.length) : (currentTrackIndex + 1) % tracks.length;
-    await loadTrack(nextIdx, play);
-}
-
-async function loadPreviousTrack(play = false) {
-    const prevIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    await loadTrack(prevIndex, play);
-}
-
-function updateButton(playing) {
-    musicToggle.textContent = playing ? '♫ Music: ON' : '♫ Music: OFF';
-    musicToggle.classList.toggle('playing', playing);
+function changeTrack(direction) {
+    let nextIndex;
+    if (isRandom) {
+        nextIndex = Math.floor(Math.random() * tracks.length);
+    } else {
+        nextIndex = currentTrackIndex + direction;
+    }
+    loadTrack(nextIndex, isPlaying);
 }
 
 
-musicToggle.addEventListener('click', async () => {
+// --- Event Listeners ---
+
+musicToggle.addEventListener('click', () => {
     if (isPlaying) {
-        if (pitchShifter) currentProgressPercent = pitchShifter.percentagePlayed;
+        if (pitchShifter) {
+            currentProgressPercent = pitchShifter.percentagePlayed;
+        }
         stopPlayback();
     } else {
-        await startPlayback(currentProgressPercent);
+        startPlayback(currentProgressPercent);
     }
 });
 
-
-musicPrev.addEventListener('click', () => loadPreviousTrack(isPlaying));
-musicSkip.addEventListener('click', () => loadNextTrack(isPlaying));
+musicPrev.addEventListener('click', () => changeTrack(-1));
+musicSkip.addEventListener('click', () => changeTrack(1));
 
 musicRandom.addEventListener('click', () => {
     isRandom = !isRandom;
@@ -231,64 +278,78 @@ musicLoop.addEventListener('click', () => {
     musicLoop.classList.toggle('playing', isLoop);
 });
 
-
+// Slider Inputs
 volumeSlider.addEventListener('input', (e) => {
-    const val = e.target.value / 100;
-    if (outputGain) outputGain.gain.value = val;
-    audioEl.volume = val;
+    const volumeLevel = e.target.value / 100;
+    if (outputGain) outputGain.gain.value = volumeLevel;
+    audioEl.volume = volumeLevel;
 });
 
 pitchSlider?.addEventListener('input', (e) => {
-    const val = e.target.value;
-    pitchLabel.textContent = `${val}%`;
-    if (pitchShifter) pitchShifter.pitch = val / 100;
+    pitchLabel.textContent = `${e.target.value}%`;
+    if (pitchShifter) pitchShifter.pitch = e.target.value / 100;
 });
 
 speedSlider?.addEventListener('input', (e) => {
-    const val = e.target.value;
-    speedLabel.textContent = `${val}%`;
-    if (pitchShifter) pitchShifter.rate = val / 100;
-    audioEl.playbackRate = val / 100;
+    speedLabel.textContent = `${e.target.value}%`;
+    if (pitchShifter) pitchShifter.rate = e.target.value / 100;
+    audioEl.playbackRate = e.target.value / 100;
 });
 
 tempoSlider?.addEventListener('input', (e) => {
-    const val = e.target.value;
-    tempoLabel.textContent = `${val}%`;
-    if (pitchShifter) pitchShifter.tempo = val / 100;
-});
+    tempoLabel.textContent = `${e.target.value}%`;
+    if (pitchShifter) pitchShifter.tempo = e.target.value / 100;
+} );
 
-musicWidgetButton.addEventListener('pointerdown', (e) => {
-    widgetDragging = true;
-    widgetDragMoved = false;
-    widgetDragStart = { x: e.clientX, y: e.clientY };
-    const rect = musicWidget.getBoundingClientRect();
-    widgetStart = { x: rect.left, y: rect.top };
-    musicWidgetButton.setPointerCapture(e.pointerId);
-});
 
-musicWidgetButton.addEventListener('pointermove', (e) => {
-    if (!widgetDragging) return;
-    const dx = e.clientX - widgetDragStart.x;
-    const dy = e.clientY - widgetDragStart.y;
-    if (Math.abs(dx) + Math.abs(dy) > 5) widgetDragMoved = true;
+// --- Widget Dragging & Toggling ---
+
+musicWidgetButton.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    hasMoved = false;
+    startX = e.clientX;
+    startY = e.clientY;
     
-    musicWidget.style.left = `${widgetStart.x + dx}px`;
-    musicWidget.style.top = `${widgetStart.y + dy}px`;
+    const rect = musicWidget.getBoundingClientRect();
+    widgetX = rect.left;
+    widgetY = rect.top;
+    
+    e.preventDefault(); // Prevents weird text selection while dragging
 });
 
-musicWidgetButton.addEventListener('pointerup', (e) => {
-    widgetDragging = false;
-    musicWidgetButton.releasePointerCapture(e.pointerId);
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    
+    const movementX = e.clientX - startX;
+    const movementY = e.clientY - startY;
+    
+    if (Math.abs(movementX) > 4 || Math.abs(movementY) > 4) {
+        hasMoved = true;
+    }
+    
+    musicWidget.style.left = `${widgetX + movementX}px`;
+    musicWidget.style.top = `${widgetY + movementY}px`;
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
 });
 
 musicWidgetButton.addEventListener('click', () => {
-    if (!widgetDragMoved) musicWidgetPanel.classList.toggle('open');
+    // Only toggle panel if the user clicked instead of dragged
+    if (!hasMoved) {
+        musicWidgetPanel.classList.toggle('open');
+    }
 });
 
-widgetClose.addEventListener('click', () => musicWidgetPanel.classList.remove('open'));
+widgetClose.addEventListener('click', () => {
+    musicWidgetPanel.classList.remove('open');
+});
 
 audioEl.addEventListener('ended', () => {
     if (nativeFallback) handleTrackEnd();
 });
 
+
+// Kick off the first track layout setup on load
 loadTrack(currentTrackIndex, false);
